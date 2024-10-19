@@ -1,0 +1,18 @@
+<div class="note-card expanded" id="note-{{ note.id }}">
+    <div>
+        <p><strong>Note Details:</strong></p>
+        <form hx-put="/note/update/{{ note.id }}"
+              hx-target="#note-{{ note.id }}"
+              hx-swap="outerHTML"
+              hx-trigger="submit">
+            <textarea name="content" rows="4">{{ note.content }}</textarea>
+            <br>
+            <button type="submit" class="save-btn">Save</button>
+            <button type="button"
+                    hx-get="/note/collapse/{{ note.id }}"
+                    hx-target="#note-{{ note.id }}"
+                    hx-swap="outerHTML"
+                    class="collapse-btn">Cancel</button>
+        </form>
+    </div>
+</div>

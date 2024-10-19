@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note Taking App</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.3/dist/htmx.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>My Notes</h1>
+
+        <!-- Input Form -->
+        <form class="note-form"
+              hx-post="/add"
+              hx-target="#note-list"
+              hx-swap="afterbegin"
+              hx-reset="true">
+            <input type="text" name="content" placeholder="Write a note..." required>
+            <button type="submit">Add Note</button>
+        </form>
+
+        <!-- Notes Container -->
+        <div id="note-list" class="note-grid">
+            {% for note in notes %}
+                {% include "_note_item.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
