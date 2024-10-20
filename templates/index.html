@@ -14,8 +14,7 @@
         <form class="note-form"
               hx-post="/add"
               hx-target="#note-list"
-              hx-swap="afterbegin"
-              hx-reset="true">
+              hx-swap="afterbegin">
             <input type="text" name="content" placeholder="Write a note..." required>
             <button type="submit">Add Note</button>
         </form>
@@ -27,5 +26,12 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- JavaScript Workaround to Reset Form -->
+    <script>
+        document.querySelector('.note-form').addEventListener('htmx:afterRequest', function(evt) {
+            evt.target.reset();
+        });
+    </script>
 </body>
 </html>

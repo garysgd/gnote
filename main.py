@@ -38,7 +38,7 @@ async def add_note(request: Request, content: str = Form(...)):
         session.add(db_note)
         session.commit()
         session.refresh(db_note)
-    return templates.TemplateResponse("_note_item.html", {"request": request, "note": db_note})
+    return templates.TemplateResponse("_note_item.html", {"request": request, "note": db_note}, status_code=200)
 
 # Route to delete a note
 @app.get("/delete/{note_id}", response_class=HTMLResponse)
