@@ -5,10 +5,12 @@
     <title>Ideate</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://unpkg.com/htmx.org@1.9.3/dist/htmx.min.js"></script>
+    <!-- Include Sortable.js -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Note taking app</h1>
+        <h1>Ideate</h1>
 
         <!-- Input Form -->
         <form class="note-form"
@@ -31,6 +33,30 @@
     <script>
         document.querySelector('.note-form').addEventListener('htmx:afterRequest', function(evt) {
             evt.target.reset();
+        });
+
+        // Initialize Sortable.js
+        var noteList = document.getElementById('note-list');
+        Sortable.create(noteList, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                // Get the new order of note IDs
+                var order = [];
+                var notes = noteList.querySelectorAll('.note-card');
+                notes.forEach(function (note) {
+                    order.push(parseInt(note.getAttribute('data-id')));
+                });
+
+                // Send the new order to the server
+                fetch('/notes/reorder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(order),
+                });
+            },
         });
     </script>
 </body>

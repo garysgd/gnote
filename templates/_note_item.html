@@ -1,4 +1,4 @@
-<div class="note-card" id="note-{{ note.id }}">
+<div class="note-card" id="note-{{ note.id }}" data-id="{{ note.id }}">
     <div hx-get="/note/{{ note.id }}"
          hx-target="#note-{{ note.id }}"
          hx-swap="outerHTML"

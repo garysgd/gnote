@@ -1,11 +1,11 @@
-<div class="note-card expanded" id="note-{{ note.id }}">
+<div class="note-card expanded" id="note-{{ note.id }}" data-id="{{ note.id }}">
     <div>
         <p><strong>Note Details:</strong></p>
         <form hx-put="/note/update/{{ note.id }}"
               hx-target="#note-{{ note.id }}"
               hx-swap="outerHTML"
               hx-trigger="submit">
-            <textarea name="content" rows="4">{{ note.content }}</textarea>
+            <textarea name="content" rows="6">{{ note.content }}</textarea>
             <br>
             <button type="submit" class="save-btn">Save</button>
             <button type="button"

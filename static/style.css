@@ -1,30 +1,80 @@
 /* static/style.css */
+
+/* Body Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f1f3f4;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    /* Removed centering properties */
 }
 
+/* Container Styles */
 .container {
     background: #ffffff;
     padding: 20px;
-    max-width: 800px;
-    width: 100%;
+    width: 90%;
+    max-width: 1400px;
+    margin: 20px auto;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
+/* Heading Styles */
 h1 {
-    font-size: 24px;
+    font-size: 32px;
     color: #202124;
     text-align: center;
 }
 
+/* Note Grid Styles */
+.note-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    position: relative;
+}
+
+/* Note Card Styles */
+.note-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.note-card:hover {
+    transform: scale(1.02);
+}
+
+/* Styles for Expanded Note */
+.note-card.expanded {
+    grid-column: 1 / -1;
+    background-color: #e8f0fe;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.note-card.expanded div {
+    padding: 20px;
+}
+
+.note-card.expanded textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #dfe1e5;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+/* Form Styles */
 .note-form {
     display: flex;
     gap: 10px;
@@ -36,7 +86,6 @@ h1 {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #dfe1e5;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     font-size: 16px;
 }
 
@@ -47,39 +96,20 @@ h1 {
     border-radius: 5px;
     padding: 10px 15px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.note-form button:hover {
-    background-color: #185abc;
-}
-
-.note-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-}
-
-.note-card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    padding: 15px;
-    position: relative;
-    transition: transform 0.2s;
-}
-
-.note-card:hover {
-    transform: scale(1.02);
-}
-
-.note-card p {
-    margin: 0;
+/* Button Styles */
+.save-btn,
+.collapse-btn {
+    margin-top: 10px;
+    padding: 12px 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
     font-size: 16px;
-    color: #202124;
-    word-wrap: break-word;
 }
 
+/* Delete Button */
 .delete-btn {
     position: absolute;
     top: 10px;
@@ -89,52 +119,14 @@ h1 {
     padding: 5px 10px;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s;
 }
 
 .delete-btn:hover {
     background-color: #d32f2f;
 }
 
-/* Styles for expanded note */
-.note-card.expanded {
-    grid-column: span 2;
-    background-color: #e8f0fe;
+/* Style for the ghost element when dragging */
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #c8dafc;
 }
-
-.note-card.expanded textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #dfe1e5;
-    border-radius: 5px;
-    resize: vertical;
-}
-
-.save-btn, .collapse-btn {
-    margin-top: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.save-btn {
-    background-color: #34a853;
-    color: #fff;
-    margin-right: 5px;
-}
-
-.save-btn:hover {
-    background-color: #0c7c31;
-}
-
-.collapse-btn {
-    background-color: #1a73e8;
-    color: #fff;
-}
-
-.collapse-btn:hover {
-    background-color: #185abc;
-}
-
