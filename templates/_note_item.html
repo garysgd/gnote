@@ -1,13 +1,9 @@
 <div class="note-card" id="note-{{ note.id }}" data-id="{{ note.id }}">
+    <input type="checkbox" name="selected_notes" value="{{ note.id }}" class="note-checkbox">
     <div hx-get="/note/{{ note.id }}"
          hx-target="#note-{{ note.id }}"
          hx-swap="outerHTML"
          style="cursor: pointer;">
         <p>{{ note.content }}</p>
     </div>
-    <a href="#"
-       hx-get="/delete/{{ note.id }}"
-       hx-target="#note-list"
-       hx-swap="outerHTML"
-       class="delete-btn">Delete</a>
 </div>

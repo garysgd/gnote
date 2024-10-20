@@ -1,7 +1,7 @@
 # main.py
 
 from fastapi import FastAPI, Request, Form, Body
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from typing import Optional, List
@@ -36,7 +36,6 @@ async def read_notes(request: Request):
 @app.post("/add", response_class=HTMLResponse)
 async def add_note(request: Request, content: str = Form(...)):
     with Session(engine) as session:
-        # Get the highest current order
         highest_order_note = session.exec(select(Note).order_by(desc(Note.order))).first()
         new_order = highest_order_note.order + 1 if highest_order_note else 0
 
@@ -57,6 +56,39 @@ async def reorder_notes(order: List[int] = Body(...)):
         session.commit()
     return {"status": "success"}
 
+@app.post("/notes/delete", response_class=HTMLResponse)
+async def delete_notes(request: Request, selected_notes: List[int] = Form(...)):
+    with Session(engine) as session:
+        for note_id in selected_notes:
+            note = session.get(Note, note_id)
+            if note:
+                session.delete(note)
+        session.commit()
+        notes = session.exec(select(Note).order_by(asc(Note.order))).all()
+    return templates.TemplateResponse("_note_list.html", {"request": request, "notes": notes})
+
+@app.post("/notes/merge", response_class=HTMLResponse)
+async def merge_notes(request: Request, selected_notes: List[int] = Form(...)):
+    with Session(engine) as session:
+        notes_to_merge = session.exec(select(Note).where(Note.id.in_(selected_notes)).order_by(asc(Note.order))).all()
+        if not notes_to_merge:
+            notes = session.exec(select(Note).order_by(asc(Note.order))).all()
+            return templates.TemplateResponse("_note_list.html", {"request": request, "notes": notes})
+        
+        merged_content = " ".join(note.content for note in notes_to_merge)
+        highest_order_note = session.exec(select(Note).order_by(desc(Note.order))).first()
+        new_order = highest_order_note.order + 1 if highest_order_note else 0
+        merged_note = Note(content=merged_content, order=new_order)
+        session.add(merged_note)
+
+        for note in notes_to_merge:
+            session.delete(note)
+        session.commit()
+
+        notes = session.exec(select(Note).order_by(asc(Note.order))).all()
+    return templates.TemplateResponse("_note_list.html", {"request": request, "notes": notes})
+
+# Existing routes for note detail, update, collapse, etc.
 @app.get("/note/{note_id}", response_class=HTMLResponse)
 async def get_note_detail(request: Request, note_id: int):
     with Session(engine) as session:
@@ -78,15 +110,3 @@ async def collapse_note(request: Request, note_id: int):
     with Session(engine) as session:
         note = session.get(Note, note_id)
     return templates.TemplateResponse("_note_item.html", {"request": request, "note": note})
-
-@app.get("/delete/{note_id}", response_class=HTMLResponse)
-async def delete_note(request: Request, note_id: int):
-    with Session(engine) as session:
-        note = session.get(Note, note_id)
-        if note:
-            session.delete(note)
-            session.commit()
-    # Return the updated notes list
-    with Session(engine) as session:
-        notes = session.exec(select(Note).order_by(asc(Note.order))).all()
-    return templates.TemplateResponse("_note_list.html", {"request": request, "notes": notes})

@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ideate</h1>
+        <h1>Note Taking App</h1>
 
         <!-- Input Form -->
         <form class="note-form"
@@ -21,15 +21,23 @@
             <button type="submit">Add Note</button>
         </form>
 
-        <!-- Notes Container -->
-        <div id="note-list" class="note-grid">
-            {% for note in notes %}
-                {% include "_note_item.html" %}
-            {% endfor %}
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button type="button" id="delete-btn">Delete Selected</button>
+            <button type="button" id="merge-btn">Merge Selected</button>
         </div>
+
+        <!-- Notes Container -->
+        <form id="notes-form">
+            <div id="note-list" class="note-grid">
+                {% for note in notes %}
+                    {% include "_note_item.html" %}
+                {% endfor %}
+            </div>
+        </form>
     </div>
 
-    <!-- JavaScript Workaround to Reset Form -->
+    <!-- JavaScript -->
     <script>
         document.querySelector('.note-form').addEventListener('htmx:afterRequest', function(evt) {
             evt.target.reset();
@@ -57,6 +65,36 @@
                     body: JSON.stringify(order),
                 });
             },
+        });
+
+        // Handle Delete Selected
+        document.getElementById('delete-btn').addEventListener('click', function() {
+            var form = document.getElementById('notes-form');
+            var formData = new FormData(form);
+
+            fetch('/notes/delete', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('note-list').innerHTML = html;
+            });
+        });
+
+        // Handle Merge Selected
+        document.getElementById('merge-btn').addEventListener('click', function() {
+            var form = document.getElementById('notes-form');
+            var formData = new FormData(form);
+
+            fetch('/notes/merge', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('note-list').innerHTML = html;
+            });
         });
     </script>
 </body>
